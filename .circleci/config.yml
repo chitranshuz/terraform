@@ -12,7 +12,6 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - *tf-install
       - run:
           name: init
           command: terraform init -input=false
@@ -26,7 +25,6 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/project
-      - *tf-install
       - run:
          name: plan
          command: terraform plan -out=plan.tfplan -input=false
