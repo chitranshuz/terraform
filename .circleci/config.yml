@@ -1,21 +1,48 @@
 version: 2
-jobs:
-  plan-apply:
+
+defaults: &defaults
     docker:
       - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    working_directory: ~/project
+    environment:
+      TF_IN_AUTOMATION: true
+      
+jobs:
+   terraform-init:
+    <<: *defaults
     steps:
       - checkout
+      - *tf-install
       - run:
-          name: terraform init & plan
-          command: | 
-            terraform init -input=false
-            terraform plan 
+          name: init
+          command: terraform init -input=false
       - persist_to_workspace:
-          root: .
+          root: ~/project
           paths:
-             - .
+            - .
+            
+   terraform-plan:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - *tf-install
+      - run:
+         name: plan
+         command: terraform plan -out=plan.tfplan -input=false
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .
+
 workflows:
-  version: 2
-  plan_approve_apply:
-    jobs:
-      - plan-apply
+   version: 2
+   install-and-check-env:
+     jobs:
+        - terraform-init:
+           filters:
+             branches:
+               only: main
+        - terraform-plan:
+           requires:
+             - terraform-init
