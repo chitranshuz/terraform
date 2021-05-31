@@ -16,7 +16,7 @@ jobs:
           name: init
           command: terraform init -input=false
       - persist_to_workspace:
-          root: ~/project
+          root: ~/project/canada
           paths:
             - .
             
@@ -24,12 +24,12 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: ~/project
+          at: ~/project/canada
       - run:
          name: plan
          command: terraform plan -out=plan.tfplan -input=false
       - persist_to_workspace:
-          root: ~/project
+          root: ~/project/canada
           paths:
             - .
 
