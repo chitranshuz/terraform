@@ -3,7 +3,7 @@ version: 2
 defaults: &defaults
     docker:
       - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
-    working_directory: ~/project
+    working_directory: ~/project/canada
     environment:
       TF_IN_AUTOMATION: true
       
