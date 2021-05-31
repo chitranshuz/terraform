@@ -11,6 +11,10 @@ jobs:
           command: | 
             terraform init -input=false
             terraform plan 
+      - persist_to_workspace:
+          root: .
+          paths:
+             - .
 workflows:
   version: 2
   plan_approve_apply:
